@@ -1,12 +1,13 @@
 import { RefBook, UL } from "./classes";
 import { Category } from "./enums";
 import { A, Author, Book, Librarian, Logger, TOptions, Magazine } from "./interfaces";
-import { PersonBook } from "./types";
+import { BookRequiredFields, PersonBook, UpdatedBook, СreateCustomerFunctionType } from "./types";
 import { Library, Shelf } from "./classes";
 import {
     bookTitleTransform, calcTotalPages, createCustomer, createCustomerID, getAllBooks,
-    getBookAuthorByIndex, getBookTitlesByCategory, getObjectProperty, getProperty, getTitles, logBookTitles,
-    logFirstAvailable, printBook, printRefBook, purge, setDefaultConfig, showHello, сheckoutBooks
+    getBookAuthorByIndex, getBookTitlesByCategory, getBooksByCategory, getBooksByCategoryPromise, getObjectProperty, getProperty, getTitles, logBookTitles,
+    logCategorySearch,
+    logFirstAvailable, logSearchResults, printBook, printRefBook, purge, setDefaultConfig, showHello, update, сheckoutBooks
 } from "./functions";
 
 // showHello('greeting', 'TypeScript');
@@ -186,11 +187,11 @@ if (flag) {
 
 //6.06
 // let library: Library = new Library();
-let library: Library = {
-    Id: 1,
-    name: "Name",
-    address: "Kyiv"
-}
+// let library: Library = {
+//     Id: 1,
+//     name: "Name",
+//     address: "Kyiv"
+// }
 
 
 //7.01
@@ -263,3 +264,90 @@ console.log(getObjectProperty(getAllBooks()[0], "markDamaged"));
 // console.log(getObjectProperty(getAllBooks()[0], "isbn"));
 console.log(getObjectProperty(getAllBooks()[0], "title"));
 
+//7.04
+const bookRequiredFields: BookRequiredFields = {
+    id: 1,
+    title: "Learn TS",
+    author: "Anna",
+    available: false,
+    category: Category.TypeScript,
+    pages: 300,
+    markDamaged: (reason: string) => console.log(`reason: ${reason}`)
+}
+
+const updatedBook: UpdatedBook = {
+    id: 1
+};
+
+const params: Parameters<СreateCustomerFunctionType> = ["Anna", 30, "Kyiv"];
+createCustomer(...params);
+
+const r1 = update(true);
+const r2 = update(false);
+
+// 8.01
+
+// const librarian = new UL.UniversityLibrarian();
+// librarian.name = "Anna";
+// console.log(librarian);
+// (librarian as any).printLibrarian();
+
+
+//8.03
+// const librarian = new UL.UniversityLibrarian();
+// librarian.name = "Anna";
+// console.log(librarian);
+
+// librarian.assistFaculty = () => { console.log("changed method"); };
+// librarian.assistFaculty();
+
+// librarian.teachCommunity = () => { };
+// Object.getPrototypeOf(librarian).teachCommunity = () => { };
+// librarian.teachCommunity()
+
+
+//08.04
+// const enc = new RefBook(1, "learn TS", 2023, 1);
+// enc.printItem();
+
+//08.05
+// const l = new Library();
+// console.log(l);
+
+//08.06
+// const librarian = new UL.UniversityLibrarian();
+// librarian.name = "Ann";
+// console.log(librarian);
+// console.log(librarian.name);
+
+//8.07
+// const enc = new RefBook(1, "learn TS", 2023, 1);
+// enc.copies = 4;
+// console.log(enc);
+
+//09.01
+// getBooksByCategory(Category.JavaScript, logCategorySearch);
+
+//09.02
+// console.log("begin");
+// getBooksByCategoryPromise(Category.JavaScript)
+//     .then(titles => {
+//         console.log(titles);
+//         return titles.length;
+//     })
+//     .then(length => console.log(`length: ${length}`))
+//     .catch(reason => console.log(reason));
+
+// getBooksByCategoryPromise(Category.Software)
+//     .then(titles => console.log(titles))
+//     .catch(reason => console.log(reason));
+
+
+// console.log("end");
+
+
+//09.03
+console.log("begin");
+logSearchResults(Category.Software)
+    .catch(reason => console.log("Error: ", reason));
+console.log("end");

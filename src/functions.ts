@@ -1,5 +1,5 @@
 import { Category } from "./enums";
-import { Book, TOptions } from "./interfaces";
+import { Book, Callback, LibMgrCallback, TOptions } from "./interfaces";
 import { BookOrUndefined, BookProperties } from "./types";
 import RefBook from "./classes/encyclopedia";
 
@@ -187,4 +187,57 @@ export function getObjectProperty<TObject extends object, TKey extends keyof TOb
     } else {
         return obj[prop];
     }
+}
+
+type UpdateResult<T> = T extends true ? string : number;
+
+export function update<T extends boolean>(param: T): UpdateResult<T> {
+    if (param) {
+        return "abc" as UpdateResult<T>;
+    }
+    return 10 as UpdateResult<T>;
+}
+
+export function getBooksByCategory(category: Category, callback: LibMgrCallback) {
+    setTimeout(() => {
+        try {
+            const titles = getBookTitlesByCategory(category);
+            if (titles.length > 0) {
+                callback(null, titles);
+            } else {
+                throw new Error("No books was found");
+            }
+        } catch (err: any) {
+            callback(err, null)
+        }
+    }, 2000);
+}
+
+export function logCategorySearch(err: Error | null, titles: string[] | null): void {
+    if (err) {
+        console.log(err.message);
+    } else {
+        console.log(titles);
+    }
+}
+
+// export function getBooksByCategory(category: Category, callback: Callback<string[]>) {}
+
+export function getBooksByCategoryPromise(category: Category): Promise<string[]> {
+    const p: Promise<string[]> = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const titles = getBookTitlesByCategory(category);
+            if (titles.length > 0) {
+                resolve(titles);
+            } else {
+                reject("No books was found");
+            }
+        }, 2000);
+    });
+    return p;
+}
+
+export async function logSearchResults(catogory: Category) {
+    const result: Awaited<ReturnType<typeof getBooksByCategoryPromise>> = await getBooksByCategoryPromise(catogory);
+    console.log(result.length);
 }

@@ -10,7 +10,6 @@
     "outDir": "./dist",
     "incremental": true,
     "tsBuildInfoFile": "./buildcache"
-
   },
   "exclude": [
     "node_modules",
